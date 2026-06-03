@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Exodus Sample Net Rules",
+  "version": "1.0.0",
+  "description": "Dev sample: declarativeNetRequest block + webRequest onBeforeRequest for a fake test host only.",
+  "permissions": ["storage", "declarativeNetRequest", "webRequest"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0b1020"/>
+      <stop offset="45%" style="stop-color:#151a32"/>
+      <stop offset="100%" style="stop-color:#1a1230"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="20%" cy="15%" r="55%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.35"/>
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="85%" cy="75%" r="50%">
+      <stop offset="0%" style="stop-color:#22d3ee;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#22d3ee;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <rect width="1920" height="1080" fill="url(#glow1)"/>
+  <rect width="1920" height="1080" fill="url(#glow2)"/>
+  <circle cx="320" cy="180" r="2" fill="#fff" opacity="0.5"/>
+  <circle cx="890" cy="120" r="1.5" fill="#fff" opacity="0.35"/>
+  <circle cx="1450" cy="220" r="2" fill="#fff" opacity="0.45"/>
+  <circle cx="1680" cy="90" r="1" fill="#fff" opacity="0.3"/>
+  <circle cx="520" cy="420" r="1" fill="#fff" opacity="0.25"/>
+</svg>

@@ -1,0 +1,35 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    "shell:default",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "exodus-core",
+          "sidecar": true,
+          "args": true
+        }
+      ]
+    },
+    "core:webview:allow-create-webview",
+    "core:webview:allow-webview-position",
+    "core:webview:allow-webview-size",
+    "core:webview:allow-set-webview-size",
+    "core:webview:allow-set-webview-position",
+    "core:webview:allow-set-webview-auto-resize",
+    "core:webview:allow-webview-show",
+    "core:webview:allow-webview-hide",
+    "core:webview:allow-set-webview-focus",
+    "core:webview:allow-webview-close",
+    "core:webview:allow-set-webview-zoom",
+    "core:event:allow-emit",
+    "core:event:allow-listen",
+    "dialog:default"
+  ]
+}

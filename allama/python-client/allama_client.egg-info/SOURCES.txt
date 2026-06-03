@@ -1,0 +1,10 @@
+README.md
+setup.py
+allama_client/__init__.py
+allama_client/client.py
+allama_client/exceptions.py
+allama_client.egg-info/PKG-INFO
+allama_client.egg-info/SOURCES.txt
+allama_client.egg-info/dependency_links.txt
+allama_client.egg-info/requires.txt
+allama_client.egg-info/top_level.txt

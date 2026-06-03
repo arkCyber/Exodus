@@ -1,0 +1,12 @@
+[
+  { "name": "temperature", "value": 0.7 },
+  { "name": "top_p", "value": 0.9 },
+  { "name": "top_k", "value": 40 },
+  { "name": "repeat_penalty", "value": 1.1 },
+  { "name": "repeat_last_n", "value": 64 },
+  { "name": "num_ctx", "value": 8192 },
+  { "name": "num_predict", "value": 512 },
+  { "name": "num_batch", "value": 512 },
+  { "name": "num_thread", "value": 6 },
+  { "name": "num_gpu", "value": 0 }
+]

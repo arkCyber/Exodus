@@ -1,0 +1,81 @@
+[package]
+name = "exodus-tauri"
+version = "0.1.0"
+description = "Exodus Browser - Tauri Backend"
+authors = ["you"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "exodus_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["unstable", "webview-data-url", "tray-icon", "macos-private-api", "protocol-asset"] }
+tauri-utils = "2"
+tauri-plugin-shell = "2"
+tauri-plugin-opener = "2.3.1"
+tauri-plugin-dialog = "2"
+notify = "6"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+sled = "0.34"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+reqwest = { version = "0.12", features = ["json", "stream"] }
+futures-util = "0.3"
+axum = { version = "0.7", features = ["json"] }
+http = "1"
+tower-http = { version = "0.5", features = ["cors"] }
+walkdir = "2"
+scraper = "0.20"
+selectors = "0.25"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+url = "2"
+libloading = "0.8"
+thiserror = "1.0"
+zip = "2"
+ring = "0.17"
+blake3 = "1.5"
+hex = "0.4"
+qrcode = "0.14"
+image = "0.25"
+rand = "0.8"
+sha2 = "0.10"
+sha1 = "0.10"
+tempfile = "3"
+rusqlite = { version = "0.32", features = ["bundled"] }
+async-trait = "0.1"
+iroh = "1.0.0-rc.0"
+xcap = "0.9"
+regex = "1"
+jsonwebtoken = "9"
+bincode = "1"
+base64 = "0.22"
+aes-gcm = "0.10"
+bcrypt = "0.15"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+seccomp = "0.1"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+cocoa = "0.25"
+objc = "0.2"
+
+[features]
+default = []
+# IM / messaging integration tests (group chat, contacts, gossip, social feed).
+# Off by default until IM network is configured. Enable: cargo test -p exodus-tauri --features im-tests
+im-tests = []
+devtools = []
+# Reserved: wire real `iroh` + `iroh-blobs` when netwatch builds on target OS.
+iroh-cdn = []
+
+[dev-dependencies]
+tempfile = "3"

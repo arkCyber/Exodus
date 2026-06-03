@@ -1,0 +1,238 @@
+/**
+ * Exodus Browser — light theme overrides (toggle class on documentElement).
+ */
+
+:global(.light-theme) {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f1f3f4;
+  --bg-tertiary: #e8eaed;
+  --text-primary: #202124;
+  --text-secondary: #5f6368;
+  --border-color: #dadce0;
+  --accent-color: #1a73e8;
+  --accent-hover: #1557b0;
+}
+
+:global(.light-theme) .exodus-browser {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .exodus-address-bar {
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+:global(.light-theme) .exodus-address-bar .nav-button {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+:global(.light-theme) .exodus-address-bar .nav-button:hover {
+  background: var(--border-color);
+}
+
+:global(.light-theme) .exodus-address-bar .url-input {
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .exodus-address-bar .url-input::placeholder {
+  color: var(--text-secondary);
+}
+
+:global(.light-theme) .exodus-bookmark-bar {
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+:global(.light-theme) .exodus-bookmark-bar .bookmark-chip {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .exodus-bookmark-bar .bookmark-chip:hover {
+  background: var(--border-color);
+  border-color: var(--accent-color);
+}
+
+:global(.light-theme) .exodus-address-bar .chrome-menu-dropdown {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+}
+
+:global(.light-theme) .menu-item {
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .menu-item:hover {
+  background: var(--bg-secondary);
+}
+
+:global(.light-theme) .menu-divider {
+  background: var(--border-color);
+}
+
+:global(.light-theme) .settings-modal {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+:global(.light-theme) .settings-modal > div {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+}
+
+:global(.light-theme) .settings-header {
+  border-bottom-color: var(--border-color);
+}
+
+:global(.light-theme) .settings-header h2 {
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .close-btn {
+  color: var(--text-secondary);
+}
+
+:global(.light-theme) .close-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .settings-section h3 {
+  color: var(--text-secondary);
+}
+
+:global(.light-theme) .settings-section label {
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .settings-section label input[type='number'],
+:global(.light-theme) .settings-section label input[type='text'] {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .settings-section label input:focus {
+  border-color: var(--accent-color);
+}
+
+:global(.light-theme) .zoom-btn {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .zoom-btn:hover {
+  background: var(--border-color);
+  border-color: var(--accent-color);
+}
+
+:global(.light-theme) .exodus-panel-modal > div {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+}
+
+:global(.light-theme) .panel-header {
+  border-bottom-color: var(--border-color);
+}
+
+:global(.light-theme) .panel-header h2 {
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .bookmark-list-item {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+:global(.light-theme) .bookmark-list-item:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-color);
+}
+
+:global(.light-theme) .bookmark-link {
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .bookmark-delete {
+  color: var(--text-secondary);
+}
+
+:global(.light-theme) .bookmark-delete:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .empty-state {
+  color: var(--text-secondary);
+}
+
+:global(.light-theme) .download-status {
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+}
+
+:global(.light-theme) .exodus-find-bar {
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+:global(.light-theme) .exodus-find-bar .find-input {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .exodus-find-bar .find-input:focus {
+  border-color: var(--accent-color);
+}
+
+:global(.light-theme) .exodus-find-bar .find-count {
+  color: var(--text-secondary);
+}
+
+:global(.light-theme) .exodus-find-bar .find-btn {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+:global(.light-theme) .exodus-find-bar .find-btn:hover {
+  background: var(--border-color);
+  border-color: var(--accent-color);
+}
+
+:global(.light-theme) .exodus-quick-links .quick-link-chip {
+  background: #f0f0f0;
+  border-color: #ccc;
+  color: #222;
+}
+
+:global(.light-theme) .exodus-status-bar {
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+:global(.light-theme) .exodus-sidebar {
+  background: var(--bg-secondary);
+  border-left-color: var(--border-color);
+}
+
+:global(.light-theme) .exodus-sidebar .sidebar-header {
+  border-bottom-color: var(--border-color);
+}
+
+:global(.light-theme) .exodus-sidebar .list-item {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+}
+
+:global(.light-theme) .exodus-sidebar .ai-chat-input {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}

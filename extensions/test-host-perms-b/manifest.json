@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Test Host Perms B",
+  "version": "1.0.0",
+  "description": "Dev hand-test: host_permissions for example-b.test (second install prompt).",
+  "host_permissions": ["https://example-b.test/*"],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

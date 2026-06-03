@@ -1,0 +1,71 @@
+/* Global styles for Exodus Browser - Chrome/Brave inspired */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --chrome-bg: #ffffff;
+  --chrome-surface: #f8f9fa;
+  --chrome-border: #dadce0;
+  --chrome-text: #202124;
+  --chrome-text-secondary: #5f6368;
+  --chrome-accent: #1a73e8;
+  --chrome-accent-hover: #1557b0;
+  --chrome-hover: #f1f3f4;
+  --chrome-active: #e8eaed;
+  --chrome-shadow: rgba(0, 0, 0, 0.1);
+  --chrome-shadow-hover: rgba(0, 0, 0, 0.2);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--chrome-surface);
+  color: var(--chrome-text);
+}
+
+#app {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Button reset */
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Input reset */
+input {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  outline: none;
+}

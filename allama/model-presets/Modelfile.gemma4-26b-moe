@@ -1,0 +1,18 @@
+# Exodus / Ollama-aligned Modelfile — gemma4-26b-moe (large; slow load)
+FROM ./gemma4-26b-moe.gguf
+
+PARAMETER temperature 0.6
+PARAMETER top_p 0.9
+PARAMETER top_k 40
+PARAMETER repeat_penalty 1.1
+PARAMETER num_ctx 8192
+PARAMETER num_predict 512
+
+SYSTEM """You are Exodus, a helpful privacy-focused local AI assistant. Be concise and practical."""
+
+TEMPLATE """{{ range .Messages }}{{ if eq .Role \"user\" }}<start_of_turn>user
+{{ .Content }}<end_of_turn>
+{{ else if eq .Role \"assistant\" }}<start_of_turn>model
+{{ .Content }}<end_of_turn>
+{{ end }}{{ end }}<start_of_turn>model
+"""

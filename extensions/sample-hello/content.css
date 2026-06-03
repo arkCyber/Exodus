@@ -1,0 +1,8 @@
+/**
+ * Exodus Sample Hello — content stylesheet (MV3 content_scripts.css).
+ * Visual marker only; does not affect page layout beyond a 3px accent.
+ */
+html[data-exodus-sample-hello='1'] {
+  outline: 3px solid rgba(99, 102, 241, 0.35);
+  outline-offset: -3px;
+}

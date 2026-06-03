@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Panel</title>
+  <style>
+    body {
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+    }
+    
+    h1 {
+      font-size: 16px;
+      margin: 0 0 12px 0;
+      color: #333;
+    }
+    
+    .info {
+      background: #e7f3ff;
+      padding: 12px;
+      border-radius: 4px;
+      border-left: 4px solid #007bff;
+      margin-bottom: 12px;
+    }
+    
+    .info p {
+      margin: 4px 0;
+      font-size: 13px;
+      color: #333;
+    }
+    
+    .status {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      background: #f5f5f5;
+      border-radius: 4px;
+    }
+    
+    .status-label {
+      font-size: 13px;
+      color: #666;
+    }
+    
+    .status-value {
+      font-weight: 600;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Extension API Demo Panel</h1>
+  
+  <div class="info">
+    <p>This panel demonstrates the Side Panel API.</p>
+    <p>It can be used to show extension-specific content alongside the main browser window.</p>
+  </div>
+  
+  <div class="status">
+    <div class="status-item">
+      <span class="status-label">Panel Type:</span>
+      <span class="status-value">Side Panel</span>
+    </div>
+    <div class="status-item">
+      <span class="status-label">Extension:</span>
+      <span class="status-value">Extension API Demo</span>
+    </div>
+    <div class="status-item">
+      <span class="status-label">Status:</span>
+      <span class="status-value">Active</span>
+    </div>
+  </div>
+  
+  <script src="panel.js"></script>
+</body>
+</html>

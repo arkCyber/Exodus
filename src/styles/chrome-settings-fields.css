@@ -1,0 +1,68 @@
+/**
+ * Exodus Browser — shared tokens and field styles for chrome://settings panels.
+ * Imported by ChromeSettingsPage; child settings/*.vue panels inherit via :deep().
+ */
+
+.chrome-settings {
+  --cs-surface: #fff;
+  --cs-border: #e8eaed;
+  --cs-title: #5f6368;
+  --cs-label: #202124;
+  --cs-hint: #5f6368;
+  --cs-field-bg: #fff;
+  --cs-field-border: #dadce0;
+  --cs-field-text: #202124;
+  --cs-field-placeholder: #80868b;
+  --cs-muted-surface: #f1f3f4;
+  --cs-btn-secondary-bg: #f1f3f4;
+  --cs-btn-secondary-text: #202124;
+  --cs-btn-primary-bg: #1a73e8;
+  --cs-btn-primary-text: #fff;
+}
+
+/* User-selected dark theme (useTheme → html.dark) */
+html.dark .chrome-settings,
+.chrome-settings[data-theme='dark'] {
+  color-scheme: dark;
+  --cs-surface: #292a2d;
+  --cs-border: #5f6368;
+  --cs-title: #9aa0a6;
+  --cs-label: #e8eaed;
+  --cs-hint: #9aa0a6;
+  --cs-field-bg: #202124;
+  --cs-field-border: #5f6368;
+  --cs-field-text: #e8eaed;
+  --cs-field-placeholder: #9aa0a6;
+  --cs-muted-surface: #3c4043;
+  --cs-btn-secondary-bg: #3c4043;
+  --cs-btn-secondary-text: #e8eaed;
+  --cs-btn-primary-bg: #8ab4f8;
+  --cs-btn-primary-text: #202124;
+}
+
+/* Explicit light theme */
+html:not(.dark) .chrome-settings[data-theme='light'],
+.chrome-settings[data-theme='light'] {
+  color-scheme: light;
+}
+
+/* Fallback when theme is auto and system prefers dark (no html.dark yet) */
+@media (prefers-color-scheme: dark) {
+  html:not(.light-theme):not([data-theme='light']) .chrome-settings:not([data-theme='light']) {
+    color-scheme: dark;
+    --cs-surface: #292a2d;
+    --cs-border: #5f6368;
+    --cs-title: #9aa0a6;
+    --cs-label: #e8eaed;
+    --cs-hint: #9aa0a6;
+    --cs-field-bg: #202124;
+    --cs-field-border: #5f6368;
+    --cs-field-text: #e8eaed;
+    --cs-field-placeholder: #9aa0a6;
+    --cs-muted-surface: #3c4043;
+    --cs-btn-secondary-bg: #3c4043;
+    --cs-btn-secondary-text: #e8eaed;
+    --cs-btn-primary-bg: #8ab4f8;
+    --cs-btn-primary-text: #202124;
+  }
+}

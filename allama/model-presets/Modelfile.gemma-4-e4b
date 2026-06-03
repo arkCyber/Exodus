@@ -1,0 +1,18 @@
+# Exodus bundle — gemma-4-E4B IT Q4_K_M (import from repo allama/models/gemma-4-E4B)
+FROM ./gemma-4-e4b.gguf
+
+PARAMETER temperature 0.7
+PARAMETER top_p 0.9
+PARAMETER top_k 40
+PARAMETER repeat_penalty 1.1
+PARAMETER num_ctx 8192
+PARAMETER num_predict 512
+
+SYSTEM """You are Exodus, a helpful local AI assistant. Be helpful, harmless, and honest."""
+
+TEMPLATE """{{ range .Messages }}{{ if eq .Role \"user\" }}<start_of_turn>user
+{{ .Content }}<end_of_turn>
+{{ else if eq .Role \"assistant\" }}<start_of_turn>model
+{{ .Content }}<end_of_turn>
+{{ end }}{{ end }}<start_of_turn>model
+"""

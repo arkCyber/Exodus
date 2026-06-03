@@ -1,0 +1,172 @@
+name: Extension CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src-tauri/src/extension_*.rs'
+      - 'src/components/Extension*.vue'
+      - 'extensions/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'src-tauri/src/extension_*.rs'
+      - 'src/components/Extension*.vue'
+      - 'extensions/**'
+
+jobs:
+  test:
+    name: Run Extension Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+      
+      - name: Cache cargo index
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+      
+      - name: Cache cargo build
+        uses: actions/cache@v3
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+      
+      - name: Run Rust tests
+        run: |
+          cd src-tauri
+          cargo test --lib extension_*
+      
+      - name: Run clippy
+        run: |
+          cd src-tauri
+          cargo clippy -- -D warnings
+
+  build:
+    name: Build Extension
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      
+      - name: Build
+        run: |
+          cd src-tauri
+          cargo build --release
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Run cargo-audit
+        uses: actions-rs/audit-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Run cargo-deny
+        uses: EmbarkStudios/cargo-deny-action@v1
+
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          components: rustfmt, clippy
+      
+      - name: Check formatting
+        run: |
+          cd src-tauri
+          cargo fmt --all -- --check
+      
+      - name: Run clippy
+        run: |
+          cd src-tauri
+          cargo clippy --all-targets --all-features -- -D warnings
+
+  benchmark:
+    name: Run Benchmarks
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      
+      - name: Run benchmarks
+        run: |
+          cd src-tauri
+          cargo bench --bench extension_benchmark
+
+  package:
+    name: Package Extension
+    runs-on: ubuntu-latest
+    needs: [test, build, security-scan, lint]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      
+      - name: Build release
+        run: |
+          cd src-tauri
+          cargo build --release
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: extension-release
+          path: src-tauri/target/release/

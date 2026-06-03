@@ -1,0 +1,38 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 15%
+        threshold: 1%
+        informational: false
+        if_ci_failed: error
+    patch:
+      default:
+        target: 15%
+        threshold: 1%
+        informational: false
+        if_ci_failed: error
+
+comment:
+  layout: "reach,diff,flags,files"
+  behavior: default
+  require_changes: false
+
+ignore:
+  - "src/**/*.test.ts"
+  - "src/**/*.test.vue"
+  - "src-tauri/**"
+  - "node_modules/**"
+  - "dist/**"
+  - "build/**"
+  - "**/*.d.ts"
+  - "**/*.config.*"
+
+flags:
+  frontend:
+    paths:
+      - "src/"
+    carryforward: false
+
+github_checks:
+  annotations: true

@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "src-tauri",
+    "exodus-core",
+    "exodus-hub-server",
+]
+# servo-browser (experimental Servo embedding) is built separately:
+#   cd servo-browser && cargo build --features servo
+resolver = "2"

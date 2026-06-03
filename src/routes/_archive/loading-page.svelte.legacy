@@ -1,0 +1,60 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+  
+  onMount(() => {
+    // Navigate to main page immediately without delay
+    window.location.href = '/';
+  });
+</script>
+
+<svelte:head>
+  <title>Loading Exodus...</title>
+</svelte:head>
+
+<div class="loading-container">
+  <div class="content">
+    <div class="logo">Exodus</div>
+    <div class="loading-text">Loading your browser...</div>
+  </div>
+</div>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .loading-container {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: white;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+  
+  .logo {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  
+  .loading-text {
+    font-size: 18px;
+    margin-bottom: 30px;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+  }
+</style>

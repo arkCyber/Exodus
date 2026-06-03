@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Exodus Sample All Frames",
+  "version": "1.0.0",
+  "description": "Dev sample: content script with all_frames for same-origin iframe injection testing.",
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ]
+}

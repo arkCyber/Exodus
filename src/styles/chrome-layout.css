@@ -1,0 +1,191 @@
+/**
+ * Exodus Browser — Chrome / Brave aligned chrome dimensions and shared classes.
+ * Import after theme.css so --color-* tokens are available.
+ */
+
+:root {
+  /* macOS overlay title bar: space for traffic lights (0 in browser / non-macOS) */
+  --chrome-macos-traffic-inset: 0px;
+
+  /* Tab strip (~Chrome 33–34px) */
+  --chrome-tab-height: 34px;
+  --chrome-tab-padding-x: 12px;
+  --chrome-tab-padding-y: 4px;
+  --chrome-tab-font-size: 12px;
+  --chrome-tab-max-width: 240px;
+  --chrome-tab-min-width: 72px;
+
+  /* Toolbar row with omnibox (Chrome desktop ~48px) */
+  --chrome-toolbar-min-height: 48px;
+  --chrome-toolbar-padding-y: 7px;
+  --chrome-toolbar-padding-x: 8px;
+  --chrome-toolbar-gap: 4px;
+
+  /* Omnibox pill (Chrome location bar ~34px) */
+  --chrome-omnibox-height: 34px;
+  --chrome-omnibox-radius: 17px;
+  --chrome-omnibox-font-size: 14px;
+  --chrome-omnibox-padding-x: 12px;
+  --chrome-omnibox-icon-size: 16px;
+
+  /* Icon buttons (back, bookmark, menu) — 32px hit target, 16px glyph */
+  --chrome-icon-btn-size: 32px;
+  --chrome-icon-size: 16px;
+  --chrome-icon-btn-font-size: 16px;
+  --chrome-icon-btn-radius: 50%;
+
+  /* Bookmark bar (Chrome ~32px row, 16px favicons, 12px labels) */
+  --chrome-bookmark-bar-height: 32px;
+  --chrome-bookmark-lead-btn-size: 28px;
+  --chrome-bookmark-separator: rgba(0, 0, 0, 0.15);
+  --chrome-bookmark-item-height: 22px;
+  --chrome-bookmark-item-padding-y: 2px;
+  --chrome-bookmark-item-padding-x: 8px;
+  --chrome-bookmark-item-gap: 6px;
+  --chrome-bookmark-item-radius: 4px;
+  --chrome-bookmark-font-size: 12px;
+  --chrome-bookmark-favicon-size: 16px;
+  --chrome-bookmark-label-max-width: 148px;
+
+  /* Extension action strip */
+  --chrome-extension-bar-height: 32px;
+
+  /* Sidebar (Firefox 136: 48px icon rail + ~320px content) */
+  --chrome-sidebar-content-width: 320px;
+  --chrome-sidebar-icon-rail: 48px;
+  --chrome-sidebar-icon-size: 36px;
+
+  /* New tab page (compact vs previous 48px tiles) */
+  --chrome-ntp-padding-y: 24px;
+  --chrome-ntp-padding-x: 20px;
+  --chrome-ntp-search-height: 44px;
+  --chrome-ntp-tile-icon: 32px;
+  --chrome-ntp-gap: 20px;
+
+  /* Chrome-like colors (light mode) */
+  --chrome-tab-bg: #dee1e6;
+  --chrome-tab-bg-active: #ffffff;
+  --chrome-tab-bg-hover: #e8eaed;
+  --chrome-tab-text: #5f6368;
+  --chrome-tab-text-active: #202124;
+  --chrome-toolbar-bg: #dee1e6;
+  --chrome-omnibox-bg: #ffffff;
+  --chrome-omnibox-border: #dadce0;
+  --chrome-divider: #dadce0;
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --chrome-tab-bg: #35363a;
+    --chrome-tab-bg-active: #292a2d;
+    --chrome-tab-bg-hover: #3c3d41;
+    --chrome-tab-text: #9aa0a6;
+    --chrome-tab-text-active: #e8eaed;
+    --chrome-toolbar-bg: #35363a;
+    --chrome-omnibox-bg: #292a2d;
+    --chrome-omnibox-border: #5f6368;
+    --chrome-divider: #5f6368;
+    --chrome-bookmark-separator: rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* Tauri macOS overlay title bar — tabs start right of traffic lights */
+html.exodus-macos-overlay-titlebar {
+  --chrome-macos-traffic-inset: 80px;
+}
+
+/* Shared chrome surface (toolbar + tab strip) */
+.exodus-chrome-tabstrip {
+  min-height: var(--chrome-tab-height);
+  flex-shrink: 0;
+  background: var(--chrome-tab-bg);
+  border-bottom: 1px solid var(--chrome-divider);
+}
+
+.exodus-chrome-tabstrip .mac-window-controls-spacer {
+  flex-shrink: 0;
+  width: var(--chrome-macos-traffic-inset);
+  min-width: var(--chrome-macos-traffic-inset);
+  height: var(--chrome-tab-height);
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+/* Window drag: toolbar + tab strip background; interactive controls opt out. */
+.exodus-window-titlebar,
+.exodus-window-titlebar.exodus-chrome-toolbar,
+.exodus-window-titlebar .exodus-chrome-tabstrip {
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+.exodus-chrome-toolbar,
+.exodus-chrome-tabstrip.chrome-drag-surface {
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+.exodus-chrome-toolbar button,
+.exodus-chrome-toolbar input,
+.exodus-chrome-toolbar form,
+.exodus-chrome-toolbar a,
+.exodus-chrome-toolbar select,
+.exodus-chrome-toolbar textarea,
+.exodus-chrome-toolbar [data-no-drag],
+.exodus-chrome-tabstrip .tab-item,
+.exodus-chrome-tabstrip .tab-new,
+.exodus-chrome-tabstrip .tab-context-menu,
+.exodus-chrome-tabstrip .menu-backdrop {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.exodus-chrome-toolbar {
+  min-height: var(--chrome-toolbar-min-height);
+  flex-shrink: 0;
+  background: var(--chrome-toolbar-bg);
+  border-bottom: 1px solid var(--chrome-divider);
+}
+
+.exodus-chrome-bookmarks {
+  min-height: var(--chrome-bookmark-bar-height);
+  max-height: var(--chrome-bookmark-bar-height);
+  flex-shrink: 0;
+  background: var(--chrome-toolbar-bg);
+  border-bottom: 1px solid var(--chrome-divider);
+}
+
+.exodus-chrome-bookmarks button,
+.exodus-chrome-bookmarks .bookmark-dropdown {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.exodus-chrome-toolbar .extension-action-bar,
+.exodus-chrome-toolbar .extension-action-btn,
+.exodus-chrome-extension-toolbar button {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.exodus-chrome-extension-toolbar {
+  flex-shrink: 0;
+}
+
+/* Chrome-style pinned extension toolbar display module (address bar). */
+.extension-toolbar-display {
+  flex-shrink: 0;
+}
+
+.exodus-extension-popup-host {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+@media (prefers-color-scheme: dark) {
+  .exodus-extension-popup-host {
+    background: #292a2d;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+}

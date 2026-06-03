@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "defaultId": "nebula",
+  "wallpapers": [
+    {
+      "id": "aurora",
+      "name": "Aurora",
+      "file": "aurora.svg",
+      "accent": "#818cf8",
+      "description": "Indigo night sky with soft aurora glow"
+    },
+    {
+      "id": "ocean",
+      "name": "Deep Ocean",
+      "file": "ocean.svg",
+      "accent": "#22d3ee",
+      "description": "Teal depths and horizon light"
+    },
+    {
+      "id": "sunset",
+      "name": "Sunset",
+      "file": "sunset.svg",
+      "accent": "#fb923c",
+      "description": "Warm dusk gradient over the horizon"
+    },
+    {
+      "id": "forest",
+      "name": "Forest",
+      "file": "forest.svg",
+      "accent": "#4ade80",
+      "description": "Moss green twilight in the woods"
+    },
+    {
+      "id": "nebula",
+      "name": "Nebula",
+      "file": "nebula.svg",
+      "accent": "#e879f9",
+      "description": "Cosmic purple and magenta clouds"
+    },
+    {
+      "id": "midnight",
+      "name": "Midnight",
+      "file": "midnight.svg",
+      "accent": "#94a3b8",
+      "description": "Minimal charcoal with subtle stars"
+    }
+  ]
+}

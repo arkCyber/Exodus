@@ -1,0 +1,260 @@
+/**
+ * Exodus Browser — Firefox 136 sidebar UI tokens and shared panel styles.
+ */
+
+:root {
+  --firefox-sidebar-accent: #0060df;
+  --firefox-sidebar-rail-bg: #f9f9fb;
+  --firefox-sidebar-rail-border: #e0e0e6;
+  --firefox-sidebar-content-bg: #ffffff;
+  --firefox-sidebar-text: #1c1b22;
+  --firefox-sidebar-text-muted: #5e5e72;
+  --firefox-sidebar-hover: rgba(0, 0, 0, 0.06);
+  --firefox-sidebar-tab-active: #ededf0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --firefox-sidebar-accent: #00ddff;
+    --firefox-sidebar-rail-bg: #2b2a33;
+    --firefox-sidebar-rail-border: #42414d;
+    --firefox-sidebar-content-bg: #1c1b22;
+    --firefox-sidebar-text: #fbfbfe;
+    --firefox-sidebar-text-muted: #b1b1c3;
+    --firefox-sidebar-hover: rgba(255, 255, 255, 0.08);
+    --firefox-sidebar-tab-active: #35343d;
+  }
+}
+
+/* Shell */
+.exodus-sidebar.exodus-sidebar--firefox {
+  --sidebar-accent: var(--firefox-sidebar-accent);
+  background: var(--firefox-sidebar-rail-bg);
+  border-color: var(--firefox-sidebar-rail-border);
+}
+
+.exodus-sidebar.exodus-sidebar--firefox.exodus-sidebar--left {
+  border-left: none;
+  border-right: 1px solid var(--firefox-sidebar-rail-border);
+}
+
+.exodus-sidebar.exodus-sidebar--firefox:not(.exodus-sidebar--left) {
+  border-left: 1px solid var(--firefox-sidebar-rail-border);
+  border-right: none;
+}
+
+.exodus-sidebar .sidebar-icon-bar {
+  background: var(--firefox-sidebar-rail-bg);
+  border-color: var(--firefox-sidebar-rail-border);
+}
+
+.exodus-sidebar .sidebar-content {
+  background: var(--firefox-sidebar-content-bg);
+  color: var(--firefox-sidebar-text);
+}
+
+.exodus-sidebar .sidebar-header {
+  border-color: var(--firefox-sidebar-rail-border);
+}
+
+.exodus-sidebar .sidebar-header h3 {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--firefox-sidebar-text);
+}
+
+.exodus-sidebar .sidebar-body {
+  padding: 8px 10px 12px;
+}
+
+/* Icon rail — rounded square (Firefox) */
+.exodus-sidebar .icon-list .sidebar-icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  color: var(--firefox-sidebar-text-muted);
+}
+
+.exodus-sidebar .icon-list .sidebar-icon-btn:hover {
+  background: var(--firefox-sidebar-hover);
+  color: var(--firefox-sidebar-text);
+}
+
+.exodus-sidebar .icon-list .sidebar-icon-btn.active {
+  background: color-mix(in srgb, var(--sidebar-accent) 16%, transparent);
+  color: var(--sidebar-accent);
+  box-shadow: inset 3px 0 0 var(--sidebar-accent);
+}
+
+.exodus-sidebar.exodus-sidebar--left .icon-list .sidebar-icon-btn.active {
+  box-shadow: inset -3px 0 0 var(--sidebar-accent);
+}
+
+.exodus-sidebar .icon-footer .sidebar-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.exodus-sidebar .icon-footer .sidebar-icon-btn.active {
+  background: var(--firefox-sidebar-hover);
+  color: var(--sidebar-accent);
+  box-shadow: none;
+}
+
+/* Lists & inputs inside sidebar */
+.exodus-sidebar .search-input,
+.exodus-sidebar .folder-input {
+  border-radius: 6px;
+  border: 1px solid var(--firefox-sidebar-rail-border);
+  background: var(--firefox-sidebar-content-bg);
+  color: var(--firefox-sidebar-text);
+  font-size: 13px;
+}
+
+.exodus-sidebar .search-input:focus,
+.exodus-sidebar .folder-input:focus {
+  outline: 2px solid color-mix(in srgb, var(--sidebar-accent) 40%, transparent);
+  outline-offset: 0;
+}
+
+.exodus-sidebar .list-item {
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.exodus-sidebar .list-item:hover,
+.exodus-sidebar .list-grow:focus-visible {
+  background: var(--firefox-sidebar-hover);
+}
+
+.exodus-sidebar .list-title {
+  font-size: 13px;
+  color: var(--firefox-sidebar-text);
+}
+
+.exodus-sidebar .list-sub {
+  font-size: 11px;
+  color: var(--firefox-sidebar-text-muted);
+}
+
+.exodus-sidebar .muted {
+  color: var(--firefox-sidebar-text-muted);
+  font-size: 12px;
+}
+
+.exodus-sidebar .memory-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--firefox-sidebar-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 12px 0 6px;
+}
+
+/* Customize panel cards */
+.exodus-customize-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.exodus-customize-section {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--firefox-sidebar-rail-border);
+  background: color-mix(in srgb, var(--firefox-sidebar-content-bg) 92%, var(--firefox-sidebar-rail-bg));
+}
+
+.exodus-customize-section h4 {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--firefox-sidebar-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.exodus-customize-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  margin: 6px 0;
+  cursor: pointer;
+  color: var(--firefox-sidebar-text);
+}
+
+.exodus-customize-hint {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* Vertical tabs embedded in sidebar */
+.exodus-sidebar .tab-bar.vertical.vertical-in-sidebar {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: 0;
+  border: none;
+  background: transparent;
+  gap: 2px;
+}
+
+.exodus-sidebar .tab-bar.vertical.vertical-in-sidebar .tab-item {
+  max-width: none;
+  width: 100%;
+  height: 36px;
+  padding: 0 10px 0 12px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.exodus-sidebar .tab-bar.vertical.vertical-in-sidebar .tab-item.active {
+  background: var(--firefox-sidebar-tab-active);
+  color: var(--firefox-sidebar-text);
+}
+
+.exodus-sidebar .tab-bar.vertical.vertical-in-sidebar .tab-item.active::before {
+  top: 6px;
+  bottom: 6px;
+  left: 0;
+  right: auto;
+  width: 3px;
+  height: auto;
+  border-radius: 0 2px 2px 0;
+  background: var(--sidebar-accent);
+}
+
+.exodus-sidebar .tab-bar.vertical.vertical-in-sidebar .tab-new {
+  width: 100%;
+  height: 32px;
+  border-radius: 6px;
+  margin: 4px 0 0;
+  font-size: 18px;
+}
+
+.exodus-sidebar .sidebar-vtabs-hint {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--sidebar-accent) 8%, transparent);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+/* Toolbar sidebar controls */
+.exodus-address-bar .toolbar-icon-btn.active {
+  background: color-mix(in srgb, var(--firefox-sidebar-accent, #0060df) 14%, transparent);
+  color: var(--firefox-sidebar-accent, #0060df);
+}
+
+.exodus-address-bar .toolbar-actions {
+  padding-left: 4px;
+  margin-left: 4px;
+  border-left: 1px solid var(--chrome-divider, #dadce0);
+}

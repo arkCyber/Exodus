@@ -1,0 +1,246 @@
+/**
+ * Exodus Browser — shared chrome styles (buttons, lists, menus).
+ * Imported once from the main page; pairs with browser-theme.css for light mode.
+ */
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+.nav-button {
+  background: #6366f1;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.nav-button.secondary {
+  background: #404040;
+}
+
+.nav-button.full {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.nav-button.danger {
+  background: #7f1d1d;
+  color: #fecaca;
+}
+
+.nav-button.danger:hover {
+  background: #991b1b;
+}
+
+.menu-item {
+  background: transparent;
+  border: none;
+  color: #e8eaed;
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  transition: background 0.2s;
+  width: 100%;
+  text-align: left;
+}
+
+.menu-item:hover {
+  background: #3c4043;
+}
+
+.menu-item:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.menu-item span:first-child {
+  font-size: 16px;
+}
+
+.menu-divider {
+  height: 1px;
+  background: #5f6368;
+  margin: 8px 0;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #9aa0a6;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: #3c4043;
+  color: #e8eaed;
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+}
+
+.history-panel-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.history-group-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #888;
+  margin: 14px 0 6px;
+  letter-spacing: 0.04em;
+}
+
+.memory-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #d1d5db;
+  margin: 16px 0 4px;
+}
+
+.memory-section-title:first-of-type {
+  margin-top: 0;
+}
+
+.memory-section-hint {
+  margin: 0 0 8px;
+  font-size: 12px;
+}
+
+.memory-clear-btn {
+  margin-top: 8px;
+}
+
+.search-input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  font-size: 13px;
+  background: #1a1a1a;
+  border: 1px solid #404040;
+  border-radius: 6px;
+  color: #e0e0e0;
+}
+
+.search-input::placeholder {
+  color: #888;
+}
+
+.folder-input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  background: #1a1a1a;
+  border: 1px solid #404040;
+  color: #ccc;
+  border-radius: 4px;
+}
+
+.list-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list-item {
+  padding: 10px;
+  background: #1a1a1a;
+  border: 1px solid #404040;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.list-item:hover {
+  border-color: #6366f1;
+}
+
+.list-item.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.list-grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-title {
+  font-size: 13px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list-sub {
+  font-size: 11px;
+  color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.muted {
+  color: #666;
+  font-size: 13px;
+  text-align: center;
+  padding: 24px 8px;
+}
+
+@keyframes exodus-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner,
+.spinner-small {
+  border-radius: 50%;
+  animation: exodus-spin 1s linear infinite;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #404040;
+  border-top-color: #6366f1;
+}
+
+.spinner-small {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #404040;
+  border-top-color: #6366f1;
+}

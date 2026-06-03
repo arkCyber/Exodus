@@ -1,0 +1,171 @@
+/* Chrome/Brave-inspired Color Theme */
+
+:root {
+  /* Primary Colors */
+  --color-primary: #1a73e8;
+  --color-primary-hover: #1557b0;
+  --color-primary-light: #e8f0fe;
+
+  /* Background Colors */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8f9fa;
+  --color-bg-tertiary: #f1f3f4;
+  --color-bg-hover: #e8eaed;
+
+  /* Text Colors */
+  --color-text-primary: #202124;
+  --color-text-secondary: #5f6368;
+  --color-text-tertiary: #9aa0a6;
+  --color-text-disabled: #bdc1c6;
+
+  /* Border Colors */
+  --color-border-primary: #c4c7c5;
+  --color-border-secondary: #d3d5d9;
+  --color-border-tertiary: #e0e0e0;
+
+  /* Tab Colors */
+  --color-tab-bg: #dee1e6;
+  --color-tab-bg-active: #ffffff;
+  --color-tab-bg-hover: #e8eaed;
+  --color-tab-bg-pinned: #d3d5d9;
+
+  /* Status Badge Colors */
+  --color-badge-private-bg: #e8eaed;
+  --color-badge-private-text: #5f6368;
+  --color-badge-private-border: #d3d5d9;
+
+  --color-badge-success-bg: #e6f4ea;
+  --color-badge-success-text: #137333;
+  --color-badge-success-border: #ceead6;
+
+  --color-badge-warning-bg: #fef7e0;
+  --color-badge-warning-text: #b06000;
+  --color-badge-warning-border: #fde8b0;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 6px;
+  --spacing-md: 8px;
+  --spacing-lg: 12px;
+  --spacing-xl: 16px;
+  --spacing-2xl: 24px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.2s ease;
+  --transition-slow: 0.3s ease;
+}
+
+/* App theme toggle (useTheme composable) */
+html.dark {
+  --color-bg-primary: #202124;
+  --color-bg-secondary: #292a2d;
+  --color-bg-tertiary: #3c4043;
+  --color-bg-hover: #3c4043;
+  --color-text-primary: #e8eaed;
+  --color-text-secondary: #9aa0a6;
+  --color-tab-bg: #292a2d;
+  --color-tab-bg-active: #35363a;
+  --color-tab-bg-hover: #3c4043;
+  --color-tab-bg-pinned: #3c4043;
+  --color-border-tertiary: #3c4043;
+}
+
+/* Dark Theme Support */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-bg-primary: #202124;
+    --color-bg-secondary: #292a2d;
+    --color-bg-tertiary: #3c4043;
+    --color-bg-hover: #3c4043;
+
+    --color-text-primary: #e8eaed;
+    --color-text-secondary: #9aa0a6;
+    --color-text-tertiary: #5f6368;
+    --color-text-disabled: #5f6368;
+
+    --color-border-primary: #5f6368;
+    --color-border-secondary: #5f6368;
+    --color-border-tertiary: #3c4043;
+
+    --color-tab-bg: #292a2d;
+    --color-tab-bg-active: #202124;
+    --color-tab-bg-hover: #3c4043;
+    --color-tab-bg-pinned: #3c4043;
+
+    --color-badge-private-bg: #3c4043;
+    --color-badge-private-text: #e8eaed;
+    --color-badge-private-border: #5f6368;
+
+    --color-badge-success-bg: #1e8e3e;
+    --color-badge-success-text: #ceead6;
+    --color-badge-success-border: #137333;
+
+    --color-badge-warning-bg: #b06000;
+    --color-badge-warning-text: #fde8b0;
+    --color-badge-warning-border: #fcd34d;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Global Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* Focus Styles */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-primary-light);
+  color: var(--color-text-primary);
+}
