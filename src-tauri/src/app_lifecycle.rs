@@ -362,13 +362,12 @@ impl AppLifecycleManager {
             }
             g.scheduler_active = true;
         }
-        // Re-enabled scheduler with optimized window state checks
-        // Window state checks are now efficient and don't cause cursor spinning
-        startup_log::log_step("lifecycle scheduler started (5s fast / 30s steady, auto-fix on)");
+        // Optimized scheduler: reduced initial fast checks to avoid unnecessary health checks
+        startup_log::log_step("lifecycle scheduler started (5s fast x6 / 30s steady, auto-fix on)");
         tauri::async_runtime::spawn(async move {
             let mut fast = interval(Duration::from_secs(5));
             let mut ticks: u64 = 0;
-            for _ in 0..12 {
+            for _ in 0..6 {
                 fast.tick().await;
                 ticks += 1;
                 run_scheduled_tick(&app, &self, ticks).await;
@@ -395,78 +394,9 @@ impl AppLifecycleManager {
         match event {
             RunEvent::Ready => {
                 self.set_phase(LifecyclePhase::Ready);
-                startup_log::log_step("RunEvent: Ready — ensure shell URL and window visible");
-                crate::app_window::ensure_main_window_ready(app);
-
-                // Disabled window position setting in RunEvent::Ready to prevent interference with lib.rs
-                // The window position is now controlled by lib.rs after tray setup
-                /*
-                startup_log::log_step("RunEvent: Ready - forcing window size and position from config");
-
-                // Force window position and size to ignore saved state
-                if let Some(win) = app.get_webview_window("main") {
-                    // Try multiple times with delays to ensure the setting sticks
-                    let win_clone = win.clone();
-                    let app_handle = app.clone();
-
-                    // First attempt immediately
-                    match win_clone.set_size(tauri::Size::Physical(tauri::PhysicalSize {
-                        width: 1280,
-                        height: 720,
-                    })) {
-                        Ok(_) => startup_log::log_step("RunEvent::Ready: set_size(1280x720) succeeded (Physical)"),
-                        Err(e) => startup_log::log_error(&format!("RunEvent::Ready: set_size(1280x720) failed (Physical): {}", e)),
-                    }
-                    match win_clone.set_position(tauri::Position::Physical(tauri::PhysicalPosition {
-                        x: 60,
-                        y: 60,
-                    })) {
-                        Ok(_) => startup_log::log_step("RunEvent::Ready: set_position(60, 60) succeeded (Physical)"),
-                        Err(e) => startup_log::log_error(&format!("RunEvent::Ready: set_position(60, 60) failed (Physical): {}", e)),
-                    }
-                    let _ = win_clone.unminimize();
-
-                    // Log the actual window state after setting
-                    if let Ok(pos) = win_clone.outer_position() {
-                        startup_log::log_step(&format!("RunEvent::Ready: Window position after set: x={}, y={}", pos.x, pos.y));
-                    }
-                    if let Ok(size) = win_clone.outer_size() {
-                        startup_log::log_step(&format!("RunEvent::Ready: Window size after set: width={}, height={}", size.width, size.height));
-                    }
-
-                    // Schedule a delayed retry using tokio
-                    let handle = app_handle.clone();
-                    tokio::spawn(async move {
-                        tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
-                        if let Some(win) = handle.get_webview_window("main") {
-                            startup_log::log_step("RunEvent::Ready: Delayed retry - forcing window size and position");
-                            match win.set_size(tauri::Size::Physical(tauri::PhysicalSize {
-                                width: 1280,
-                                height: 720,
-                            })) {
-                                Ok(_) => startup_log::log_step("RunEvent::Ready: Delayed set_size(1280x720) succeeded (Physical)"),
-                                Err(e) => startup_log::log_error(&format!("RunEvent::Ready: Delayed set_size(1280x720) failed (Physical): {}", e)),
-                            }
-                            match win.set_position(tauri::Position::Physical(tauri::PhysicalPosition {
-                                x: 60,
-                                y: 60,
-                            })) {
-                                Ok(_) => startup_log::log_step("RunEvent::Ready: Delayed set_position(60, 60) succeeded (Physical)"),
-                                Err(e) => startup_log::log_error(&format!("RunEvent::Ready: Delayed set_position(60, 60) failed (Physical): {}", e)),
-                            }
-                            let _ = win.unminimize();
-
-                            // Log the actual window state after delayed set
-                            if let Ok(pos) = win.outer_position() {
-                                startup_log::log_step(&format!("RunEvent::Ready: Delayed Window position after set: x={}, y={}", pos.x, pos.y));
-                            }
-                            if let Ok(size) = win.outer_size() {
-                                startup_log::log_step(&format!("RunEvent::Ready: Delayed Window size after set: width={}, height={}", size.width, size.height));
-                            }
-                        }
-                    });
-                }
-                */
+                startup_log::log_step("RunEvent: Ready — lifecycle phase set");
+                // Window initialization is now handled by lib.rs to avoid conflicts
+                // Do not call ensure_main_window_ready here
             }
             #[cfg(target_os = "macos")]
             RunEvent::Reopen { .. } => {
@@ -522,13 +452,9 @@ impl AppLifecycleManager {
                             crate::app_window::log_window_detailed_state(&win, "AFTER WindowEvent::Moved");
                         }
                     }
-                    // Configure window immediately after creation
                     WindowEvent::Resized(_) => {
-                        // Do not force Physical resize here — it shrinks the window on Retina and fights setup().
-                        if let Some(win) = app.get_webview_window("main") {
-                            startup_log::log_step("WindowEvent::Resized — ensure visible");
-                            crate::app_window::ensure_main_window_visible(app);
-                        }
+                        // Log resize event but do not force visibility to avoid interference
+                        startup_log::log_step("WindowEvent::Resized");
                     }
                     _ => {}
                 }
