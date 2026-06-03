@@ -21,13 +21,6 @@ export type CallSessionCallbacks = {
   onError?: (msg: string) => void;
 };
 
-const sharedManager = new RtcCallSessionManager();
-
-/** App-wide 1:1 call manager (IM, contacts, group chat). */
-export function getRtcCallManager(): RtcCallSessionManager {
-  return sharedManager;
-}
-
 export type CallPhaseListener = (phase: CallUiPhase) => void;
 
 /**
@@ -163,4 +156,11 @@ export class RtcCallSessionManager {
     this.setPhase('idle', cb);
     this.sessionId = '';
   }
+}
+
+const sharedManager = new RtcCallSessionManager();
+
+/** App-wide 1:1 call manager (IM, contacts, group chat). */
+export function getRtcCallManager(): RtcCallSessionManager {
+  return sharedManager;
 }
