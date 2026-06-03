@@ -21,7 +21,6 @@ use tauri::{AppHandle, Emitter, Manager, RunEvent, Url};
 use tokio::time::interval;
 
 use crate::allama_manager::AllamaManager;
-use crate::app_window;
 use crate::config::ConfigState;
 use crate::lifecycle_log::{self, LifecycleLogEntry};
 use crate::sidecar::{SidecarManager, probe_models_endpoint};
@@ -105,19 +104,6 @@ struct RemediationPresetDef {
 
 /// Preset remediation playbooks — ordered by `priority` when multiple match.
 const REMEDIATION_PRESETS: &[RemediationPresetDef] = &[
-    // Disabled automatic window activation to prevent interference
-    // Window will only be activated when explicitly requested by user
-    /*
-    RemediationPresetDef {
-        id: "show_main_window",
-        name: "Show Main Window",
-        description: "Re-apply macOS dock policy, show and focus the main window.",
-        component: "main_window",
-        triggers_on: ComponentHealth::Warn,
-        cooldown_key: "show_main_window",
-        priority: 10,
-    },
-    */
     RemediationPresetDef {
         id: "reload_frontend",
         name: "Reload Frontend",
@@ -126,15 +112,6 @@ const REMEDIATION_PRESETS: &[RemediationPresetDef] = &[
         triggers_on: ComponentHealth::Warn,
         cooldown_key: "reload_frontend",
         priority: 20,
-    },
-    RemediationPresetDef {
-        id: "reload_on_hidden_window",
-        name: "Reload When Window Hidden",
-        description: "Reload UI when the window is hidden but the dev server is healthy.",
-        component: "main_window",
-        triggers_on: ComponentHealth::Warn,
-        cooldown_key: "reload_frontend",
-        priority: 25,
     },
     RemediationPresetDef {
         id: "restart_allama",
@@ -153,15 +130,6 @@ const REMEDIATION_PRESETS: &[RemediationPresetDef] = &[
         triggers_on: ComponentHealth::Warn,
         cooldown_key: "restart_sidecar",
         priority: 40,
-    },
-    RemediationPresetDef {
-        id: "full_ui_recovery",
-        name: "Full UI Recovery",
-        description: "Escalation: show window then reload frontend when both UI checks fail.",
-        component: "_ui_stack",
-        triggers_on: ComponentHealth::Error,
-        cooldown_key: "full_ui_recovery",
-        priority: 5,
     },
 ];
 
@@ -400,65 +368,12 @@ impl AppLifecycleManager {
             }
             #[cfg(target_os = "macos")]
             RunEvent::Reopen { .. } => {
-                // User clicked dock icon - show and focus main window
+                // User clicked dock icon - just log the event
                 startup_log::log_step("Dock icon clicked (Reopen event)");
-                
-                // Log window state before activation
-                if let Some(win) = app.get_webview_window("main") {
-                    let visible = win.is_visible().unwrap_or(false);
-                    let minimized = win.is_minimized().unwrap_or(false);
-                    let focused = win.is_focused().unwrap_or(false);
-                    startup_log::log_step(&format!(
-                        "Window state before Reopen: visible={}, minimized={}, focused={}",
-                        visible, minimized, focused
-                    ));
-                }
-                
-                crate::app_window::ensure_main_window_visible(app);
-                
-                // Log window state after activation
-                if let Some(win) = app.get_webview_window("main") {
-                    let visible = win.is_visible().unwrap_or(false);
-                    let minimized = win.is_minimized().unwrap_or(false);
-                    let focused = win.is_focused().unwrap_or(false);
-                    startup_log::log_step(&format!(
-                        "Window state after Reopen: visible={}, minimized={}, focused={}",
-                        visible, minimized, focused
-                    ));
-                }
+                // Window management is now handled by lib.rs only
             }
-            #[cfg(target_os = "macos")]
-            RunEvent::WindowEvent { label, event, .. } if label == "main" => {
-                use tauri::WindowEvent;
-                match event {
-                    WindowEvent::Focused(true) => {
-                        startup_log::log_step("Window gained focus");
-                    }
-                    WindowEvent::Focused(false) => {
-                        startup_log::log_step("Window lost focus");
-                    }
-                    WindowEvent::CloseRequested { .. } => {
-                        startup_log::log_warn("Window close requested");
-                    }
-                    WindowEvent::Destroyed => {
-                        startup_log::log_warn("Window destroyed");
-                    }
-                    WindowEvent::ScaleFactorChanged { scale_factor, .. } => {
-                        startup_log::log_step(&format!("Window scale factor → {scale_factor}"));
-                    }
-                    WindowEvent::Moved(_) => {
-                        startup_log::log_step("WindowEvent::Moved - window position changed");
-                        if let Some(win) = app.get_webview_window("main") {
-                            crate::app_window::log_window_detailed_state(&win, "AFTER WindowEvent::Moved");
-                        }
-                    }
-                    WindowEvent::Resized(_) => {
-                        // Log resize event but do not force visibility to avoid interference
-                        startup_log::log_step("WindowEvent::Resized");
-                    }
-                    _ => {}
-                }
-            }
+            // Window events are now handled by lib.rs only
+            // No window event logging in lifecycle manager
             RunEvent::ExitRequested { .. } => {
                 self.set_phase(LifecyclePhase::ShuttingDown);
             }
@@ -540,28 +455,9 @@ fn health_rank(health: ComponentHealth) -> u8 {
 
 /// Pure preset selection from component health map (deterministic, no I/O).
 fn select_presets_pure(health: &HashMap<String, ComponentHealth>) -> Vec<&'static RemediationPresetDef> {
-    let main_h = health
-        .get("main_window")
-        .copied()
-        .unwrap_or(ComponentHealth::Unknown);
-    let frontend_h = health
-        .get("frontend")
-        .copied()
-        .unwrap_or(ComponentHealth::Unknown);
-
     let mut matched: Vec<&RemediationPresetDef> = REMEDIATION_PRESETS
         .iter()
         .filter(|preset| {
-            if preset.id == "reload_on_hidden_window" {
-                return main_h == ComponentHealth::Warn && frontend_h == ComponentHealth::Ok;
-            }
-            if preset.id == "full_ui_recovery" {
-                return health_rank(main_h) >= health_rank(ComponentHealth::Warn)
-                    && health_rank(frontend_h) >= health_rank(ComponentHealth::Warn);
-            }
-            if preset.component == "_ui_stack" {
-                return false;
-            }
             let component_h = health
                 .get(preset.component)
                 .copied()
@@ -574,16 +470,6 @@ fn select_presets_pure(health: &HashMap<String, ComponentHealth>) -> Vec<&'stati
 
     let mut seen_keys = std::collections::HashSet::new();
     matched.retain(|p| seen_keys.insert(p.cooldown_key));
-
-    if matched.iter().any(|p| p.id == "full_ui_recovery") {
-        matched.retain(|p| {
-            p.id == "full_ui_recovery"
-                || !matches!(
-                    p.id,
-                    "show_main_window" | "reload_frontend" | "reload_on_hidden_window"
-                )
-        });
-    }
 
     matched
 }
@@ -641,13 +527,9 @@ async fn execute_preset(
     }
 
     match preset.id {
-        "show_main_window" => remediate_main_window(app, manager, preset.id).await,
-        "reload_frontend" | "reload_on_hidden_window" => {
-            remediate_reload_frontend(app, manager, preset.id).await;
-        }
+        "reload_frontend" => remediate_reload_frontend(app, manager, preset.id).await,
         "restart_allama" => remediate_restart_allama(app, manager, preset.id).await,
         "restart_sidecar" => remediate_restart_sidecar(app, manager, preset.id).await,
-        "full_ui_recovery" => {}
         _ => {
             lifecycle_log::log(
                 lifecycle_log::LifecycleLogLevel::Warn,
@@ -661,7 +543,6 @@ async fn execute_preset(
 
 /// Run all health probes (no side effects).
 async fn run_health_checks(app: &AppHandle, manager: &Arc<AppLifecycleManager>) {
-    check_main_window(app, manager);
     check_config(app, manager);
     check_frontend_dev_server_async(app, manager).await;
     check_allama_async(app, manager).await;
@@ -686,13 +567,6 @@ async fn auto_remediate(app: &AppHandle, manager: &Arc<AppLifecycleManager>) {
     lifecycle_log::log_preset_plan(&ids, "health tick auto-fix");
 
     for preset in presets {
-        if preset.id == "full_ui_recovery" {
-            if manager.can_remediate(preset.cooldown_key) {
-                remediate_main_window(app, manager, preset.id).await;
-                remediate_reload_frontend(app, manager, preset.id).await;
-            }
-            continue;
-        }
         execute_preset(app, manager, preset).await;
     }
 
@@ -702,53 +576,13 @@ async fn auto_remediate(app: &AppHandle, manager: &Arc<AppLifecycleManager>) {
     }
 }
 
-async fn remediate_main_window(
-    app: &AppHandle,
-    manager: &Arc<AppLifecycleManager>,
-    preset_id: &str,
-) {
-    const KEY: &str = "show_main_window";
-    let cooldown_key = if preset_id == "full_ui_recovery" {
-        "full_ui_recovery"
-    } else {
-        KEY
-    };
-    if !manager.can_remediate(cooldown_key) {
-        return;
-    }
-    #[cfg(target_os = "macos")]
-    macos_activate_process();
-    app_window::ensure_main_window_ready(app);
-
-    let ok = app.get_webview_window("main").map(|w| w.is_visible().unwrap_or(false)).unwrap_or(false);
-    let apply_cooldown = preset_id != "full_ui_recovery";
-    manager.record_remediation(
-        preset_id,
-        cooldown_key,
-        "show_main_window",
-        ok,
-        if ok {
-            "window shown and focused"
-        } else {
-            "main window still missing or hidden"
-        },
-        apply_cooldown,
-    );
-    app_window::log_main_window_state(app, "auto-fix show_main_window");
-}
-
 async fn remediate_reload_frontend(
     app: &AppHandle,
     manager: &Arc<AppLifecycleManager>,
     preset_id: &str,
 ) {
     const KEY: &str = "reload_frontend";
-    let cooldown_key = if preset_id == "full_ui_recovery" {
-        "full_ui_recovery"
-    } else {
-        KEY
-    };
-    if !manager.can_remediate(cooldown_key) {
+    if !manager.can_remediate(KEY) {
         return;
     }
 
@@ -793,7 +627,7 @@ async fn remediate_reload_frontend(
         detail = "main window not found for reload".to_string();
     }
 
-    manager.record_remediation(preset_id, cooldown_key, "reload_frontend", success, detail, true);
+    manager.record_remediation(preset_id, KEY, "reload_frontend", success, detail, true);
 }
 
 async fn remediate_restart_allama(
@@ -936,29 +770,6 @@ async fn remediate_restart_sidecar(
     }
 }
 
-fn check_main_window(app: &AppHandle, manager: &Arc<AppLifecycleManager>) {
-    match app.get_webview_window("main") {
-        Some(win) => {
-            let url = win.url().map(|u| u.to_string()).unwrap_or_else(|_| String::new());
-            let visible = win.is_visible().unwrap_or(false);
-            let focused = win.is_focused().unwrap_or(false);
-            let minimized = win.is_minimized().unwrap_or(false);
-            let msg = format!("url={url} visible={visible} focused={focused} minimized={minimized}");
-            let health = if !visible || minimized {
-                ComponentHealth::Warn
-            } else {
-                ComponentHealth::Ok
-            };
-            manager.set_component("main_window", health, msg);
-        }
-        None => manager.set_component(
-            "main_window",
-            ComponentHealth::Error,
-            "main webview window not found",
-        ),
-    }
-}
-
 async fn check_frontend_dev_server_async(app: &AppHandle, manager: &Arc<AppLifecycleManager>) {
     let dev_url = match &app.config().build.dev_url {
         Some(url) => url.to_string(),
@@ -1083,18 +894,6 @@ fn check_config(app: &AppHandle, manager: &Arc<AppLifecycleManager>) {
     }
 }
 
-#[cfg(target_os = "macos")]
-fn macos_activate_process() {
-    let pid = std::process::id();
-    let script = format!(
-        "tell application \"System Events\" to set frontmost of first process whose unix id is {pid} to true"
-    );
-    let _ = std::process::Command::new("osascript").args(["-e", &script]).output();
-}
-
-#[cfg(not(target_os = "macos"))]
-fn macos_activate_process() {}
-
 // --- Tauri commands ---
 
 /// Return full lifecycle status (phase, components, remediations).
@@ -1102,17 +901,6 @@ fn macos_activate_process() {}
 pub fn lifecycle_get_status(
     manager: tauri::State<'_, Arc<AppLifecycleManager>>,
 ) -> Result<LifecycleStatusDto, String> {
-    Ok(manager.status())
-}
-
-/// Force main window visible and refresh dock policy.
-#[tauri::command]
-pub async fn lifecycle_show_main_window(
-    app: AppHandle,
-    manager: tauri::State<'_, Arc<AppLifecycleManager>>,
-) -> Result<LifecycleStatusDto, String> {
-    startup_log::log_step("lifecycle_show_main_window invoked (manual)");
-    remediate_main_window(&app, &manager, "show_main_window").await;
     Ok(manager.status())
 }
 
