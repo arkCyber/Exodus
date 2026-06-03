@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { invoke } from '@tauri-apps/api/core';
+  import { invoke, isTauri } from '@tauri-apps/api/core';
   import { listen } from '@tauri-apps/api/event';
   import type { Webview } from '@tauri-apps/api/webview';
   import type {
@@ -2244,6 +2244,7 @@
   }
 
   async function saveSession() {
+    if (!isTauri()) return;
     if (!shouldPersistSession(sessionRestore, privateMode)) return;
     try {
       const currentTabs = sortedTabs().map(t => ({
@@ -2261,6 +2262,7 @@
 
   /** Restore last session when only the default new-tab is open and session restore is enabled. */
   async function loadSession() {
+    if (!isTauri()) return;
     if (!shouldPersistSession(sessionRestore, privateMode)) return;
     try {
       const session = await invoke<{

@@ -2,7 +2,7 @@
  * Exodus Browser — privacy dashboard stats helpers.
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { invoke, isTauri } from '@tauri-apps/api/core';
 
 /** Subset of privacy stats shown in chrome UI. */
 export type PrivacyStatsSummary = {
@@ -14,6 +14,9 @@ export type PrivacyStatsSummary = {
 
 /** Load privacy stats from backend. */
 export async function fetchPrivacyStats(): Promise<PrivacyStatsSummary | null> {
+  if (!isTauri()) {
+    return null;
+  }
   try {
     return await invoke<PrivacyStatsSummary>('get_privacy_stats');
   } catch (error) {

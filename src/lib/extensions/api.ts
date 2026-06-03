@@ -2,7 +2,7 @@
  * Exodus Browser — Web Extension host API (chrome.storage.local subset).
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { invoke, isTauri } from '@tauri-apps/api/core';
 export {
   exodusAllamaAvailable,
   getExodusAllamaShim,
@@ -13,6 +13,9 @@ import type { ExtensionTabSync } from '$lib/extensions/syncTabs';
 
 /** List installed extensions. */
 export async function listExtensions(): Promise<ExtensionInfo[]> {
+  if (!isTauri()) {
+    return [];
+  }
   return invoke<ExtensionInfo[]>('extension_list');
 }
 

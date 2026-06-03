@@ -2,7 +2,7 @@
  * Exodus Browser — Tauri app lifecycle monitor API (health checks + auto-remediation).
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { invoke, isTauri } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import { logStartup, logStartupError } from '$lib/startupLog';
 
@@ -42,21 +42,33 @@ export type LifecycleStatusDto = {
 
 /** Fetch current lifecycle status from Rust. */
 export async function getLifecycleStatus(): Promise<LifecycleStatusDto> {
+  if (!isTauri()) {
+    throw new Error('Not running in Tauri environment');
+  }
   return invoke<LifecycleStatusDto>('lifecycle_get_status');
 }
 
 /** Ask backend to show main window and re-apply dock policy. */
 export async function showMainWindowViaLifecycle(): Promise<LifecycleStatusDto> {
+  if (!isTauri()) {
+    throw new Error('Not running in Tauri environment');
+  }
   return invoke<LifecycleStatusDto>('lifecycle_show_main_window');
 }
 
 /** Run health checks + auto-remediation immediately. */
 export async function runLifecycleHealthTick(): Promise<LifecycleStatusDto> {
+  if (!isTauri()) {
+    throw new Error('Not running in Tauri environment');
+  }
   return invoke<LifecycleStatusDto>('lifecycle_run_health_tick');
 }
 
 /** Toggle automatic remediation (checks still run). */
 export async function setLifecycleAutoFix(enabled: boolean): Promise<boolean> {
+  if (!isTauri()) {
+    throw new Error('Not running in Tauri environment');
+  }
   return invoke<boolean>('lifecycle_set_auto_fix', { enabled });
 }
 
@@ -65,6 +77,11 @@ export async function setLifecycleAutoFix(enabled: boolean): Promise<boolean> {
  * Returns an unlisten function.
  */
 export async function bindLifecycleRecovery(): Promise<() => void> {
+  if (!isTauri()) {
+    logStartupError('bindLifecycleRecovery: Not running in Tauri environment', new Error('Not in Tauri environment'));
+    return () => {};
+  }
+  
   const unsubs: Array<() => void> = [];
   try {
     unsubs.push(
