@@ -20,6 +20,45 @@ pub fn configure_macos_app_policy(app: &AppHandle) {
     }
 }
 
+/// Set the dock icon for the application (for dev mode).
+pub fn set_dock_icon(app: &AppHandle) {
+    #[cfg(target_os = "macos")]
+    {
+        use std::path::PathBuf;
+        
+        // Try to load icon from the icons directory
+        let icon_path = app.path().resolve("icons/icon.icns", tauri::path::BaseDirectory::Resource);
+        
+        match icon_path {
+            Ok(path) if path.exists() => {
+                startup_log::log_step(&format!("Setting dock icon from: {:?}", path));
+                // Use NSApplication to set the application icon
+                unsafe {
+                    use cocoa::appkit::NSApp;
+                    use cocoa::foundation::NSString;
+                    use objc::{msg_send, sel, sel_impl};
+                    
+                    let ns_app: cocoa::base::id = NSApp();
+                    let ns_string: cocoa::base::id = NSString::alloc(cocoa::base::nil).init_str(&path.to_string_lossy());
+                    
+                    let _: () = msg_send![ns_app, setApplicationIconImage: ns_string];
+                    startup_log::log_step("Dock icon set successfully");
+                }
+            }
+            Ok(path) => {
+                startup_log::log_warn(&format!("Icon file not found at: {:?}", path));
+            }
+            Err(e) => {
+                startup_log::log_warn(&format!("Failed to resolve icon path: {}", e));
+            }
+        }
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        let _ = app;
+    }
+}
+
 /// Log main window label, URL, visibility, and focus for diagnostics.
 pub fn log_main_window_state(app: &AppHandle, phase: &str) {
     let Some(win) = app.get_webview_window("main") else {

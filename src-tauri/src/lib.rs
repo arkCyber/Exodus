@@ -815,6 +815,11 @@ pub fn run() {
             startup_log::log_step("Starting macOS app policy configuration...");
             app_window::configure_macos_app_policy(app.handle());
             startup_log::log_step("macOS app policy configuration completed");
+            
+            // Set dock icon for dev mode
+            startup_log::log_step("Setting dock icon...");
+            app_window::set_dock_icon(app.handle());
+            startup_log::log_step("Dock icon configuration completed");
 
             // Force window size and position immediately in setup to override macOS state restoration
             startup_log::log_step("=== Checking for main window in setup() ===");

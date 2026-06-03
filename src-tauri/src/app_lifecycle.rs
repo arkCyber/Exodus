@@ -409,16 +409,6 @@ async fn run_scheduled_tick(app: &AppHandle, manager: &Arc<AppLifecycleManager>,
     }
     manager.recompute_phase();
 
-    {
-        let mut g = manager.lock_inner();
-        if g.launch_mode == LaunchMode::DevBinary {
-            g.last_error = Some(
-                "Dev binary: Dock may show a generic icon. Use `pnpm tauri build` and open Exodus.app."
-                    .into(),
-            );
-        }
-    }
-
     let status = manager.status();
     let degraded = status.phase == LifecyclePhase::Degraded;
     lifecycle_log::log_tick(tick, &format!("{:?}", status.phase), degraded);
