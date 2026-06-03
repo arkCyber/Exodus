@@ -5,7 +5,7 @@
   "identifier": "com.exodus.browser",
   "build": {
     "beforeDevCommand": "sh scripts/tauri-before-dev.sh",
-    "devUrl": "http://localhost:1421",
+    "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "sh scripts/bun-build.sh",
     "frontendDist": "../dist"
   },

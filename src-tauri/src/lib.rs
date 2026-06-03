@@ -822,9 +822,6 @@ pub fn run() {
                 startup_log::log_step("✓ Main window found in setup()");
                 startup_log::log_step("=== Starting window configuration in setup() ===");
 
-                // Log initial window state
-                app_window::log_window_detailed_state(&win, "BEFORE setup config");
-
                 // Get the scale factor for Retina displays
                 let scale_factor = match win.scale_factor() {
                     Ok(sf) => sf,
@@ -845,18 +842,6 @@ pub fn run() {
                     Err(e) => startup_log::log_error(&format!("✗ set_size(1280x720) failed (Logical): {}", e)),
                 }
 
-                app_window::ensure_main_window_shell_url(app.handle());
-
-                // Log state after size change
-                app_window::log_window_detailed_state(&win, "AFTER size set");
-
-                // Center window on screen
-                startup_log::log_step("Centering window on screen");
-                app_window::center_window(&win);
-
-                // Log state after centering
-                app_window::log_window_detailed_state(&win, "AFTER center_window");
-
                 // Ensure window is visible and unminimized
                 let _ = win.unminimize();
                 match win.show() {
@@ -864,31 +849,6 @@ pub fn run() {
                     Err(e) => startup_log::log_error(&format!("✗ win.show() failed: {}", e)),
                 }
 
-                // Check webview URL and inject debug script
-                startup_log::log_step("DEBUG: About to check webview URL");
-                if let Ok(url) = win.url() {
-                    startup_log::log_step(&format!("Webview current URL: {}", url));
-                } else {
-                    startup_log::log_error("Failed to get webview URL");
-                }
-                
-                // Inject debug script to check if Vue app is loaded
-                startup_log::log_step("DEBUG: About to spawn async task for Vue app check");
-                let win_clone = win.clone();
-                tauri::async_runtime::spawn(async move {
-                    startup_log::log_step("DEBUG: Async task started, waiting 2 seconds");
-                    tokio::time::sleep(tokio::time::Duration::from_millis(2000)).await;
-                    startup_log::log_step("Checking if Vue app is loaded...");
-                    let result = win_clone.eval("console.log('Vue app check:', typeof window.__VUE__, document.getElementById('app'))");
-                    match result {
-                        Ok(_) => startup_log::log_step("✓ Vue app check eval succeeded"),
-                        Err(e) => startup_log::log_error(&format!("✗ Vue app check eval failed: {}", e)),
-                    }
-                });
-
-                // Log final window state
-                app_window::log_window_detailed_state(&win, "FINAL state after setup config");
-                app_window::log_window_screen_placement(&win, app.handle(), "setup FINAL");
                 startup_log::log_step("=== Window configuration in setup() completed ===");
             } else {
                 startup_log::log_error("✗ Main window NOT found in setup() - window configuration skipped");
@@ -1261,22 +1221,11 @@ pub fn run() {
             startup_log::log_step("Initializing TrackingProtectionManager...");
             let tracking_dir = app_data_dir.join("tracking");
             let tracking_manager = Arc::new(
-                TrackingProtectionManager::new_shell(tracking_dir)
+                TrackingProtectionManager::new(tracking_dir)
                     .map_err(|e| format!("Tracking protection init failed: {e}"))?,
             );
             app.manage(tracking_manager.clone());
-            startup_log::log_step("TrackingProtectionManager initialized (shell)");
-            let tracking_for_sub = tracking_manager.clone();
-            tauri::async_runtime::spawn(async move {
-                startup_log::log_step("Loading tracking protection heavy data asynchronously...");
-                if let Err(e) = tracking_for_sub.load_heavy_data() {
-                    tracing::warn!("Tracking protection load heavy data: {}", e);
-                }
-                if let Err(e) = tracking_for_sub.refresh_subscription_if_due().await {
-                    tracing::warn!("Tracking subscription refresh: {}", e);
-                }
-                startup_log::log_step("Tracking protection heavy data loaded");
-            });
+            startup_log::log_step("TrackingProtectionManager initialized");
 
             // Initialize smart suggestions
             startup_log::log_step("Initializing SmartSuggestionsManager...");
@@ -1683,8 +1632,8 @@ pub fn run() {
             }
             app_window::log_main_window_state(app.handle(), "after tray");
             startup_log::log_step("Ensuring main window visible...");
-            app_window::ensure_main_window_ready(app.handle());
-            startup_log::log_step("Main window shell + visibility ensured");
+            app_window::ensure_main_window_visible(app.handle());
+            startup_log::log_step("Main window visibility ensured");
 
             startup_log::log_step("Initializing Video RTC...");
             let rtc_app = app.handle().clone();
@@ -1726,7 +1675,6 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
                 app_lifecycle::lifecycle_get_status,
-                app_lifecycle::lifecycle_show_main_window,
                 app_lifecycle::lifecycle_run_health_tick,
                 app_lifecycle::lifecycle_set_auto_fix,
                 app_lifecycle::lifecycle_get_logs,
@@ -3053,7 +3001,7 @@ pub fn run() {
                 startup_log::log_step("Lifecycle manager NOT found, using fallback");
                 startup_log::log_step("RunEvent::Ready (lifecycle manager not yet managed)");
                 app_window::log_main_window_state(app_handle, "RunEvent::Ready");
-                app_window::ensure_main_window_ready(app_handle);
+                app_window::ensure_main_window_visible(app_handle);
 
                 // Disabled automatic window size adjustment to prevent interference with setup settings
                 // The window size is now controlled by setup() in lib.rs
